@@ -1,13 +1,14 @@
 def input_error(func):
+    """Decorator to handle input errors and exceptions."""
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except ValueError:
-            return "Give me name and phone please."
-        except KeyError:
-            return "Contact not found."
         except IndexError:
             return "Enter the argument for the command."
+        except KeyError:
+            return "Contact not found."
+        except ValueError:
+            return "Give me name and phone please."
         except Exception as e:
             return f"An error occurred: {str(e)}"
 
@@ -15,7 +16,7 @@ def input_error(func):
 
 
 def parse_input(user_input):
-    """Розбирає введену команду та її аргументи."""
+    """Parses the entered command and its arguments."""
     cmd, *args = user_input.split()
     cmd = cmd.strip().lower()
     return cmd, *args
@@ -23,7 +24,7 @@ def parse_input(user_input):
 
 @input_error
 def add_contact(args, contacts):
-    """Додає новий контакт."""
+    """Adds a new contact."""
     name, phone = args
     contacts[name] = phone
     return "Contact added."
@@ -31,7 +32,7 @@ def add_contact(args, contacts):
 
 @input_error
 def change_contact(args, contacts):
-    """Змінює номер телефону для існуючого контакту."""
+    """Changes the phone number for an existing contact."""
     name, phone = args
     contacts[name] = phone
     return "Contact updated."
@@ -39,7 +40,7 @@ def change_contact(args, contacts):
 
 @input_error
 def show_phone(args, contacts):
-    """Показує номер телефону для заданого контакту."""
+    """Displays the phone number for the specified contact."""
     name = args[0]
     if name in contacts:
         return f"The phone number for {name} is {contacts[name]}."
@@ -47,7 +48,7 @@ def show_phone(args, contacts):
 
 @input_error
 def show_all(contacts):
-    """Виводить всі збережені контакти та їхні номери."""
+    """Displays all saved contacts and their numbers."""
     if not contacts:
         return "No contacts saved."
     result = "\n".join([f"{name}: {phone}" for name, phone in contacts.items()])
